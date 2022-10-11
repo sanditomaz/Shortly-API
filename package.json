@@ -12,5 +12,24 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
-  }
+  },
+  "name": "projeto16-shortly",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanditomaz/Shortly-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanditomaz/Shortly-API/issues"
+  },
+  "homepage": "https://github.com/sanditomaz/Shortly-API#readme",
+  "description": ""
 }
