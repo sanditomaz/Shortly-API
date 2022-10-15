@@ -25,7 +25,7 @@ const urlPostValidator = async (req, res, next) => {
     );
 
     if (getUserId.rows.length === 0) {
-      return res.sendStatus(404);
+      return res.sendStatus(401);
     }
 
     const usersId = getUserId.rows[0].usersId;
@@ -39,6 +39,25 @@ const urlPostValidator = async (req, res, next) => {
 };
 
 const validateUrl = async (req, res, next) => {
+  const { id } = req.query;
+
+  if (!id) return res.sendStatus(422);
+
+  const selectId = await connection.query(
+    `SELECT id, "shortUrl", url FROM urls WHERE id = ($1);`,
+    [id]
+  );
+
+  if (
+    selectId.rows[0].shortUrl.length === 0 ||
+    selectId.rows[0].shortUrl === null
+  ) {
+    return res.status(404).send("Not found");
+  }
+
+  const selectedId = selectId.rows[0];
+  res.locals.selectedId = selectedId;
+
   next();
 };
 

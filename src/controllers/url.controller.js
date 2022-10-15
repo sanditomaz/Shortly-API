@@ -13,17 +13,17 @@ async function insertUrl(req, res) {
       [url, shortUrl, usersId]
     );
 
-    const urlId = await connection.query(
-      `SELECT id FROM urls WHERE "usersId" = ($1);`,
-      [usersId]
-    );
+    // const urlId = await connection.query(
+    //   `SELECT id FROM urls WHERE "usersId" = ($1);`,
+    //   [usersId]
+    // );
 
-    urlId.rows.map((u) =>
-      connection.query(
-        `INSERT INTO urlscount ("usersId", "urlId") VALUES($1, $2);`,
-        [usersId, u.id]
-      )
-    );
+    // urlId.rows.map((u) =>
+    //   connection.query(
+    //     `INSERT INTO urlscount ("usersId", "urlId") VALUES($1, $2);`,
+    //     [usersId, u.id]
+    //   )
+    // );
 
     res.status(201).send(shortUrl);
   } catch (error) {
@@ -32,15 +32,17 @@ async function insertUrl(req, res) {
 }
 
 async function sendUrl(req, res) {
-  res.sendStatus("OKaaa");
+  const { selectedId } = res.locals;
+
+  res.status(200).send(selectedId);
 }
 
 async function sendShortUrl(req, res) {
-  res.sendStatus("OKaaa");
+  res.status(200).send("okaaa");
 }
 
 async function deleteUrl(req, res) {
-  res.sendStatus("OKaaa");
+  res.send("OKaaa");
 }
 
 export { insertUrl, sendUrl, sendShortUrl, deleteUrl };
