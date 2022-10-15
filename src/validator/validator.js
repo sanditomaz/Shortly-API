@@ -12,9 +12,10 @@ const signUpSchema = Joi.object({
     "string.empty": "Email cannot be an empty field",
     "any.required": "Email is required",
   }),
-  password: Joi.string().min(3).empty().required().messages({
+  password: Joi.string().min(3).empty().required().regex(/^\S+$/).messages({
     "string.min": "Password should have at least 3 characters",
     "string.empty": "Password cannot be an empty field",
+    "string.pattern.base": "No empty spaces allowed",
     "any.required": "Password is required",
   }),
   confirmPassword: Joi.string().empty().required().messages({
@@ -36,11 +37,19 @@ const signInSchema = Joi.object({
 });
 
 const urlShortenSchema = Joi.object({
-  url: Joi.string().empty().uri().required().messages({
-    "string.empty": "Url cannot be an empty field",
-    "string.uri": "Invalid url format",
-    "any.required": "Url is required",
-  }),
+  url: Joi.string()
+    .empty()
+    .pattern(
+      /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/
+    )
+    .required()
+    .messages({
+      "string.empty": "Url cannot be an empty field",
+      "string.url": "Invalid url format",
+      "any.required": "Url is required",
+      "string.pattern.base":
+        "Invalid url! Url must start with http:// or https://",
+    }),
 });
 
 const signUpValidation = validator(signUpSchema);
