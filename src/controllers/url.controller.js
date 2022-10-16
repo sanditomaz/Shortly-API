@@ -37,7 +37,11 @@ async function sendShortUrl(req, res) {
 }
 
 async function deleteUrl(req, res) {
-  res.send("OKaaa");
+  const { delUrlId } = res.locals;
+
+  connection.query(`DELETE FROM urlscount WHERE "urlId" = ($1);`, [delUrlId]);
+  connection.query(`DELETE FROM urls WHERE id = ($1);`, [delUrlId]);
+  res.sendStatus(204);
 }
 
 export { insertUrl, sendUrl, sendShortUrl, deleteUrl };

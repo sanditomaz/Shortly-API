@@ -85,6 +85,45 @@ const validateShortUrl = async (req, res, next) => {
 };
 
 const validateDeletion = async (req, res, next) => {
+  const { id } = req.query;
+  if (!id) return res.sendStatus(422);
+
+  const token = req.headers.authorization?.replace("Bearer ", "");
+
+  if (!token) {
+    return res.sendStatus(401);
+  }
+
+  try {
+    const getUserId = await connection.query(
+      `SELECT "usersId" FROM sessions WHERE token = ($1);`,
+      [token]
+    );
+
+    if (getUserId.rows.length === 0) {
+      return res.sendStatus(401);
+    }
+
+    const userUrl = await connection.query(
+      `SELECT "usersId", id FROM urls WHERE id = ($1);`,
+      [id]
+    );
+
+    if (userUrl.rows.length === 0) return res.sendStatus(404);
+
+    const usersId = getUserId.rows[0].usersId;
+    const userUrlId = userUrl.rows[0].usersId;
+    const delUrlId = userUrl.rows[0].id;
+
+    if (usersId !== userUrlId) return res.sendStatus(401);
+
+    res.locals.delUrlId = delUrlId;
+
+    next();
+  } catch (error) {
+    res.sendStatus(500);
+  }
+
   next();
 };
 
