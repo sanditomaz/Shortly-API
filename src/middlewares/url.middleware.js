@@ -61,8 +61,31 @@ const validateUrl = async (req, res, next) => {
   next();
 };
 
+const validateShortUrl = async (req, res, next) => {
+  const { shortUrl } = req.query;
+
+  if (!shortUrl) return res.sendStatus(422);
+
+  const selectUrl = await connection.query(
+    `SELECT id, url, "usersId" FROM urls WHERE "shortUrl" = ($1);`,
+    [shortUrl]
+  );
+
+  if (selectUrl.rows.length === 0) return res.status(404).send("Not found");
+
+  const selectedUrl = selectUrl.rows[0].url;
+  const userId = selectUrl.rows[0].usersId;
+  const urlId = selectUrl.rows[0].id;
+
+  res.locals.selectedUrl = selectedUrl;
+  res.locals.userId = userId;
+  res.locals.urlId = urlId;
+
+  next();
+};
+
 const validateDeletion = async (req, res, next) => {
   next();
 };
 
-export { urlPostValidator, validateUrl, validateDeletion };
+export { urlPostValidator, validateUrl, validateShortUrl, validateDeletion };
