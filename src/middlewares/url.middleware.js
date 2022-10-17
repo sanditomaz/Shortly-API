@@ -39,7 +39,7 @@ const urlPostValidator = async (req, res, next) => {
 };
 
 const validateUrl = async (req, res, next) => {
-  const { id } = req.query;
+  const { id } = req.params;
   if (!id) return res.sendStatus(422);
 
   const selectId = await connection.query(
@@ -61,7 +61,7 @@ const validateUrl = async (req, res, next) => {
 };
 
 const validateShortUrl = async (req, res, next) => {
-  const { shortUrl } = req.query;
+  const { shortUrl } = req.params;
   if (!shortUrl) return res.sendStatus(422);
 
   const selectUrl = await connection.query(
@@ -83,7 +83,7 @@ const validateShortUrl = async (req, res, next) => {
 };
 
 const validateDeletion = async (req, res, next) => {
-  const { id } = req.query;
+  const { id } = req.params;
   if (!id) return res.sendStatus(422);
 
   const token = req.headers.authorization?.replace("Bearer ", "");

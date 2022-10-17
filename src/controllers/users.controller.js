@@ -2,25 +2,32 @@ import { connection } from "../database/database.js";
 
 async function sendUser(req, res) {
   const { userId } = res.locals;
-  let userInfo;
 
   try {
-    userInfo = await connection.query(`SELECT * FROM users`);
+    const userInfo = await connection.query(
+      `SELECT users.id, users.name, COUNT(urlscount."urlId") AS "visitCount" FROM users JOIN urlscount ON urlscount."usersId" = users.id WHERE users.id = $1 GROUP BY users.id;`,
+      [userId]
+    );
+    const urlList = await connection.query(
+      `SELECT urls.id, urls."shortUrl", urls."url", COUNT(urlscount."urlId") AS "visitCount" FROM urls JOIN urlscount ON urlscount."urlId" = urls.id WHERE urls."usersId" = $1 GROUP BY urls.id;`,
+      [userId]
+    );
 
-    console.log(userInfo);
-    res.send("sandiiii");
+    const userList = userInfo.rows[0];
+    userList.shortenedUrls = urlList.rows;
+
+    res.status(200).send(userList);
   } catch (error) {
-    console.log(error);
-    console.log(error);
-    console.log(error);
-    console.log(error);
-    console.log(error);
     res.send(error);
   }
 }
 
 async function sendRanking(req, res) {
-  res.sendStatus("OKaaa");
+  const users = await connection.query(
+    `SELECT users.id, users.name, count(urls.url) AS "linksCount", count(urlscount."urlId") AS "visitCount" FROM users LEFT JOIN urls ON urls."usersId"= users.id LEFT JOIN urlscount ON urlscount."urlId" = urls.id GROUP BY users.id ORDER BY "visitCount" DESC;`
+  );
+
+  res.status(200).send(users.rows.slice(0, 10));
 }
 
 export { sendUser, sendRanking };

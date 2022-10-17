@@ -13,18 +13,16 @@ const validateUser = async (req, res, next) => {
       [token]
     );
 
-    const userId = valid.rows[0].usersId;
-
     if (valid.rows.length === 0) return res.sendStatus(401);
-    //if (userId === null) return res.sendStatus(404);
+
+    const userId = valid.rows[0].usersId;
+    if (userId === null) return res.sendStatus(404);
 
     res.locals.userId = userId;
     next();
   } catch (error) {
     res.sendStatus(500);
   }
-
-  next();
 };
 
 export { validateUser };
