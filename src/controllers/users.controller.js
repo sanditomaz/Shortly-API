@@ -24,7 +24,7 @@ async function sendUser(req, res) {
 
 async function sendRanking(req, res) {
   const users = await connection.query(
-    `SELECT users.id, users.name, count(urls.url) AS "linksCount", count(urlscount."urlId") AS "visitCount" FROM users LEFT JOIN urls ON urls."usersId"= users.id LEFT JOIN urlscount ON urlscount."urlId" = urls.id GROUP BY users.id ORDER BY "visitCount" DESC;`
+    `SELECT users.id, users.name, count(distinct urls.id) AS "linksCount", count(urlscount."urlId") AS "visitCount" FROM users LEFT JOIN urls ON urls."usersId"= users.id LEFT JOIN urlscount ON urlscount."urlId" = urls.id GROUP BY users.id ORDER BY "visitCount" DESC;`
   );
 
   res.status(200).send(users.rows.slice(0, 10));
