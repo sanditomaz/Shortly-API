@@ -123,3 +123,5 @@ const validateDeletion = async (req, res, next) => {
 };
 
 export { urlPostValidator, validateUrl, validateShortUrl, validateDeletion };
+
+//Heroku
