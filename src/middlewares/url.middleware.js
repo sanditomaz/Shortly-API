@@ -47,11 +47,7 @@ const validateUrl = async (req, res, next) => {
     [id]
   );
 
-  if (
-    selectId.rows[0].shortUrl.length === 0 ||
-    selectId.rows[0].shortUrl === null ||
-    selectId.rows[0].shortUrl === undefined
-  ) {
+  if (selectId.rows.length === 0) {
     return res.status(404).send("Not found");
   }
 
