@@ -40,7 +40,6 @@ const urlPostValidator = async (req, res, next) => {
 
 const validateUrl = async (req, res, next) => {
   const { id } = req.query;
-
   if (!id) return res.sendStatus(422);
 
   const selectId = await connection.query(
@@ -63,7 +62,6 @@ const validateUrl = async (req, res, next) => {
 
 const validateShortUrl = async (req, res, next) => {
   const { shortUrl } = req.query;
-
   if (!shortUrl) return res.sendStatus(422);
 
   const selectUrl = await connection.query(
